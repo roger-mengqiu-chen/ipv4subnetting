@@ -1,1 +1,1 @@
-web: java -jar target/ipv4subnetting-0.0.1-SNAPSHOT.jar -Dserver.port=$PORT
+web: java $JAVA_OPTS -jar -Dspring.profiles.active=production target/ipv4subnetting-0.0.1-SNAPSHOT.jar --port $PORT

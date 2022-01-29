@@ -1,0 +1,1 @@
+web: java -jar target/ipv4subnetting-0.0.1-SNAPSHOT.jar

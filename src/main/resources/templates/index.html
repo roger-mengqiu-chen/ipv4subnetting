@@ -13,6 +13,9 @@
     <main class="container-fluid col-6">
         <div class="container-fluid" id="header"><h1 style="text-align: center;">IPv4 auto subnetting</h1></div>
         <div id="form">
+            <div class="alert alert-danger" role="alert" id="errMsg" style="visibility: hidden">
+
+            </div>
             <div class="input-group ">
                 <label for="hostIP" class="input-group-text">
                     Host IP
@@ -65,7 +68,7 @@
             hostInput.setAttribute("id", "numOfHost");
             hostInput.setAttribute("type", "number");
             hostInput.setAttribute("class", "form-control");
-            hostInput.setAttribute("placeholder", "Number of host");
+            hostInput.setAttribute("placeholder", "Required Number of hosts");
             
             let btn = document.createElement("button");
             btn.setAttribute("type","Button");
@@ -99,6 +102,9 @@
                 "mask":"${mask}",   
             `;
             let subnets = "";
+
+            const alert = document.querySelector('#errMsg');
+            
             for (let i = 0; i < listOfNets.length; i ++) {
                 let element = listOfNets[i];
                 let netName = element.querySelector('#netName').value;
@@ -116,19 +122,31 @@
 
             const requestPath = `/subnet`;
 
+            let ok = true;
+
             const action = fetch (requestPath, {
                     method: 'POST',
                     body: jsonRequest,
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                }).then((res) => res.json());
+                }).then((res) => {
+                    if (res.status === 400) {
+                        alert.style.visibility = 'visible';
+                        res.text().then((text) => alert.innerHTML = text);
+                    }
+                    else {
+                        res.json();
+                    }
+                }).catch (err => ok = false);
 
             const getResult = () => {
                 action.then(r => {parseResultToTable(r)});
             }
-
-            getResult();
+            if (ok) {
+                getResult();
+            }
+            
             
             
             //parseResultToTable(result);

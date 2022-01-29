@@ -114,8 +114,7 @@
             let jsonRequest = `{${json}}`;
             console.log(jsonRequest);
 
-            const port = location.port;
-            const requestPath = `http://localhost:${port}/subnet`;
+            const requestPath = `/subnet`;
 
             const action = fetch (requestPath, {
                     method: 'POST',

@@ -104,6 +104,7 @@
             let subnets = "";
 
             const alert = document.querySelector('#errMsg');
+            alert.style.visibility = 'hidden';
             
             for (let i = 0; i < listOfNets.length; i ++) {
                 let element = listOfNets[i];
@@ -131,34 +132,32 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => response.json())
+                .then(response => {
+                    return response.json();
+                })
                 .then((msg) => {
                     
                     if (msg.status == 'Success') {
                         parseResultToTable(msg.data);
                     }
-                    else {
+                    else if (msg.status == 'Fail'){
                         alert.style.visibility = 'visible';
                         alert.innerHTML = msg.data;
                     }
+                    else {
+                        alert.style.visibility = 'visible';
+                        alert.innerHTML = 'Invalid input';
+                    }
                 });
-
-            // const getResult = () => {
-            //     action.then(r => {parseResultToTable(r)});
-            // }
-            // if (ok) {
-            //     getResult();
-            // }
-            
-            
-            
-            //parseResultToTable(result);
         }
 
         function parseResultToTable(result) {
             console.log(result);
             
             const table = document.querySelector('#result');
+
+            table.innerHTML = "";
+
             for (let i = 0; i < result.length; i++) {
             
                 let name = result[i].name;

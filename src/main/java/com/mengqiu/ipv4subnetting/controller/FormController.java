@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -58,7 +58,7 @@ public class FormController {
         int[] parentAddress = netService.getNetwork(hostIp, mask);
 
         // generate a list of Net from the user request
-        ArrayList<Net> nets = netService.getNetListFromMap(subnets);
+        List<Net> nets = netService.getNetListFromMap(subnets);
 
         // assign IP address to the net in the list
         if (netService.assignIPtoEachNet(nets, parentAddress, prefix) > 0) {

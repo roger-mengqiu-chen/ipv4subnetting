@@ -3,10 +3,7 @@ package com.mengqiu.ipv4subnetting.service;
 import com.mengqiu.ipv4subnetting.model.Net;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class NetService {
@@ -20,6 +17,9 @@ public class NetService {
     public int[] stringToArr (String s) {
         int [] arr = new int [4];
         String [] sArr = s.split ("\\.");
+        if (sArr.length != 4) {
+            return null;
+        }
         for (int i = 0; i < 4; i ++) {
             try {
                 int n = Integer.parseInt(sArr[i]);
@@ -130,7 +130,6 @@ public class NetService {
 
     public long getMaxNumberOfHost(Net net) {
         int prefix = net.getPrefix();
-        int[] ipAddress = net.getIpAddress();
         return (int) Math.pow(2, 32 - prefix) - 2;
     }
 
@@ -140,12 +139,12 @@ public class NetService {
      * @return
      */
     public long ipToLong (int[] ip) {
-        long dec_address = 0;
+        long decAddress = 0;
 
         for (int i = 0; i < 4; i ++) {
-            dec_address += ip[i] * (long)Math.pow(2, (3-i)*8);
+            decAddress += ip[i] * (long)Math.pow(2, (3-i)*8);
         }
-        return dec_address;
+        return decAddress;
     }
 
     /**
@@ -170,7 +169,7 @@ public class NetService {
      * @param map
      * @return
      */
-    public ArrayList<Net> getNetListFromMap(Map<String, Integer> map) {
+    public List<Net> getNetListFromMap(Map<String, Integer> map) {
         ArrayList<Net> list = new ArrayList<>();
         map.forEach((name, numOfHosts) -> {
             Net n = new Net(name, numOfHosts);
@@ -187,7 +186,7 @@ public class NetService {
      * @param nets
      * @param parentAddress
      */
-    public int assignIPtoEachNet(ArrayList<Net> nets, int[] parentAddress, int prefix) {
+    public int assignIPtoEachNet(List<Net> nets, int[] parentAddress, int prefix) {
 
         // Get max number of address of parentAddress:
         long maxNumbOfAddress = (long)Math.pow(2, 32 - prefix);

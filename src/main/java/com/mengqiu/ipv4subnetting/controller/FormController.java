@@ -2,9 +2,9 @@ package com.mengqiu.ipv4subnetting.controller;
 
 import com.mengqiu.ipv4subnetting.model.Net;
 import com.mengqiu.ipv4subnetting.request.NetsRequest;
+import com.mengqiu.ipv4subnetting.response.JsonResponse;
 import com.mengqiu.ipv4subnetting.service.NetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class FormController {
     private NetService netService;
 
     @PostMapping
-    public ResponseEntity subnet (@RequestBody NetsRequest request) {
+    public JsonResponse subnet (@RequestBody NetsRequest request) {
         String hostIpString = request.getHostIp();
         String maskString = request.getMask();
         Map<String, Integer> subnets = request.getSubnets();
@@ -29,7 +29,7 @@ public class FormController {
         // parse hostIP
         int[] hostIp = netService.stringToArr(hostIpString);
         if (hostIp == null) {
-            return ResponseEntity.badRequest().body("Invalid host IP address");
+            return new JsonResponse("Fail", "Invalid host IP address");
         }
 
         // get mask address of parent network, also need validation for prefix or mask
@@ -39,7 +39,7 @@ public class FormController {
             mask = netService.stringToArr(maskString);
             prefix = netService.maskToPrefix(mask);
             if (mask == null) {
-                return ResponseEntity.badRequest().body("Invalid mask address");
+                return new JsonResponse("Fail", "Invalid mask address");
             }
         }
         else {
@@ -47,10 +47,10 @@ public class FormController {
                 prefix = Integer.parseInt(maskString);
                 mask = netService.prefixToMask(prefix);
                 if (mask == null) {
-                    return ResponseEntity.badRequest().body("Invalid prefix");
+                    return new JsonResponse("Fail","Invalid prefix");
                 }
             } catch (NumberFormatException e) {
-                return ResponseEntity.badRequest().body("Invalid prefix");
+                return new JsonResponse("Fail", "Invalid prefix");
             }
         }
 
@@ -62,10 +62,10 @@ public class FormController {
 
         // assign IP address to the net in the list
         if (netService.assignIPtoEachNet(nets, parentAddress, prefix) > 0) {
-            return ResponseEntity.ok(nets);
+            return new JsonResponse("Success", nets);
         }
         else {
-            return ResponseEntity.badRequest().body("Not enough address !");
+            return new JsonResponse("Fail", "Not enough address !");
         }
     }
 

@@ -130,22 +130,25 @@
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                }).then((res) => {
-                    if (res.status === 400) {
-                        alert.style.visibility = 'visible';
-                        res.text().then((text) => alert.innerHTML = text);
+                })
+                .then(response => response.json())
+                .then((msg) => {
+                    
+                    if (msg.status == 'Success') {
+                        parseResultToTable(msg.data);
                     }
                     else {
-                        res.json();
+                        alert.style.visibility = 'visible';
+                        alert.innerHTML = msg.data;
                     }
-                }).catch (err => ok = false);
+                });
 
-            const getResult = () => {
-                action.then(r => {parseResultToTable(r)});
-            }
-            if (ok) {
-                getResult();
-            }
+            // const getResult = () => {
+            //     action.then(r => {parseResultToTable(r)});
+            // }
+            // if (ok) {
+            //     getResult();
+            // }
             
             
             

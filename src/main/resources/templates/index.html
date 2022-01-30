@@ -138,7 +138,7 @@
                     }
                 })
                 .then(response => {
-                    handleErrors(response);
+                    return handleErrors(response);
                 })
                 .then((msg) => {
                     
@@ -153,10 +153,6 @@
                     //     alert.style.visibility = 'visible';
                     //     alert.innerHTML = 'Invalid input';
                     // }
-                })
-                .catch (err => {
-                    alert.style.visibility = 'visible';
-                    alert.innerHTML = 'Invalid input';
                 });
         }
 

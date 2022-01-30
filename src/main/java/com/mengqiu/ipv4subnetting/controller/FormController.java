@@ -5,10 +5,9 @@ import com.mengqiu.ipv4subnetting.request.NetsRequest;
 import com.mengqiu.ipv4subnetting.response.JsonResponse;
 import com.mengqiu.ipv4subnetting.service.NetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -69,6 +68,9 @@ public class FormController {
         }
     }
 
-
-
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public JsonResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return new JsonResponse("Fail", "Invalid input");
+    }
 }

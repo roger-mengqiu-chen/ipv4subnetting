@@ -125,6 +125,11 @@
 
             let ok = true;
 
+            function handleErrors(response) {
+                if (!response.ok) throw new Error(response.status);
+                return response.json();
+            }
+
             const action = fetch (requestPath, {
                     method: 'POST',
                     body: jsonRequest,
@@ -133,7 +138,7 @@
                     }
                 })
                 .then(response => {
-                    return response.json();
+                    handleErrors(response);
                 })
                 .then((msg) => {
                     
@@ -144,10 +149,14 @@
                         alert.style.visibility = 'visible';
                         alert.innerHTML = msg.data;
                     }
-                    else {
-                        alert.style.visibility = 'visible';
-                        alert.innerHTML = 'Invalid input';
-                    }
+                    // else {
+                    //     alert.style.visibility = 'visible';
+                    //     alert.innerHTML = 'Invalid input';
+                    // }
+                })
+                .catch (err => {
+                    alert.style.visibility = 'visible';
+                    alert.innerHTML = 'Invalid input';
                 });
         }
 
